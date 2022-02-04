@@ -1,0 +1,47 @@
+package core
+
+import (
+	"github.com/emilwidlund/esmerelda/vectors"
+)
+
+type Formula func(vector *vectors.Vector2) *vectors.Vector2
+
+type VectorField struct {
+	width    int
+	height   int
+	columns  int
+	rows     int
+	cellSize int
+	vectors  [][]*vectors.Vector2
+	formula  Formula
+}
+
+func NewVectorField(width int, height int, formula Formula) *VectorField {
+	const CELL_SIZE = 10
+
+	columns := width / CELL_SIZE
+	rows := height / CELL_SIZE
+
+	v := make([][]*vectors.Vector2, rows)
+
+	for y := 0; y < rows; y++ {
+		rowVectors := make([]*vectors.Vector2, columns)
+
+		for x := 0; x < columns; x++ {
+			vec := formula(vectors.NewVector2(float64(x), float64(y))).Normalize()
+			rowVectors[x] = vec
+		}
+
+		v[y] = rowVectors
+	}
+
+	return &VectorField{
+		width:    width,
+		height:   height,
+		columns:  columns,
+		rows:     rows,
+		cellSize: CELL_SIZE,
+		vectors:  v,
+		formula:  formula,
+	}
+}
