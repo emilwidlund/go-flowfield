@@ -17,7 +17,7 @@ type VectorField struct {
 }
 
 func NewVectorField(width int, height int, formula Formula) *VectorField {
-	const CELL_SIZE = 10
+	const CELL_SIZE = 20
 
 	columns := width / CELL_SIZE
 	rows := height / CELL_SIZE
@@ -28,7 +28,10 @@ func NewVectorField(width int, height int, formula Formula) *VectorField {
 		rowVectors := make([]*vectors.Vector2, columns)
 
 		for x := 0; x < columns; x++ {
-			vec := formula(vectors.NewVector2(float64(x), float64(y))).Normalize()
+			cartesianX, cartesianY := float64(x-columns/2), float64(rows/2-y)
+			scale := 10.
+			vec := formula(vectors.NewVector2(cartesianX/float64(columns)*scale, cartesianY/float64(rows)*scale)).Normalize()
+
 			rowVectors[x] = vec
 		}
 
