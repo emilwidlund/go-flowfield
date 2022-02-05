@@ -14,8 +14,6 @@ func Draw(field *VectorField) *gg.Context {
 		for x, vector := range row {
 
 			cellX, cellY := float64(x*field.cellSize), float64(y*field.cellSize)
-			// _, cellMidY := cellX+float64(field.cellSize/2), cellY+float64(field.cellSize/2)
-			// _, cellEndY := float64(x*field.cellSize+field.cellSize), float64(y*field.cellSize+field.cellSize)
 
 			c.Push()
 			c.Translate(cellX, cellY)
