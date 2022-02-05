@@ -22,8 +22,10 @@ func Draw(field *VectorField) *gg.Context {
 			c.Rotate(-vector.Angle())
 			c.DrawLine(0, 0, 10, 0)
 			c.Stroke()
-			c.DrawCircle(10, 0, 2)
-			c.Fill()
+			c.DrawLine(10, 0, 9, -1)
+			c.DrawLine(9, -1, 9, 1)
+			c.DrawLine(9, 1, 10, 0)
+			c.Stroke()
 			c.Pop()
 		}
 	}
