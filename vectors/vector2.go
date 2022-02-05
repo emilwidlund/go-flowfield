@@ -69,8 +69,11 @@ func (vector *Vector2) DivideScalar(scalar float64) *Vector2 {
 	return vector
 }
 
-func (vector *Vector2) Magnitude() float64 {
-	return math.Sqrt(math.Pow(vector.X, 2) + math.Pow(vector.Y, 2))
+func (vector *Vector2) Scale(scalar float64) *Vector2 {
+	vector.X *= scalar
+	vector.Y *= scalar
+
+	return vector
 }
 
 func (vector *Vector2) Normalize() *Vector2 {
@@ -81,6 +84,19 @@ func (vector *Vector2) Normalize() *Vector2 {
 	} else {
 		return vector.DivideScalar(magnitude)
 	}
+}
+
+func (vector *Vector2) Rotate(angle float64) *Vector2 {
+	c, s := math.Cos(angle), math.Sin(angle)
+
+	vector.X = vector.X*c - vector.Y*s
+	vector.Y = vector.X*s + vector.Y*c
+
+	return vector
+}
+
+func (vector *Vector2) Magnitude() float64 {
+	return math.Sqrt(math.Pow(vector.X, 2) + math.Pow(vector.Y, 2))
 }
 
 func (a *Vector2) DistanceTo(b *Vector2) float64 {

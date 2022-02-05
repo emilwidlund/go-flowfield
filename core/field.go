@@ -1,6 +1,8 @@
 package core
 
 import (
+	"math"
+
 	"github.com/emilwidlund/esmerelda/vectors"
 )
 
@@ -15,6 +17,27 @@ type VectorField struct {
 	arrows   bool
 	vectors  [][]*vectors.Vector2
 	formula  Formula
+}
+
+func (field *VectorField) GetCell(x int, y int) *vectors.Vector2 {
+	return field.vectors[y][x]
+}
+
+func (field *VectorField) GetCellIndex(x int, y int) (int, int) {
+	return int(math.Floor((float64((x)) / float64(field.cellSize)))), int(math.Floor(float64(y) / float64(field.cellSize)))
+}
+
+func (field *VectorField) GetAngle(x int, y int) float64 {
+	ix, iy := field.GetCellIndex(x, y)
+
+	alphaX := float64((x % field.cellSize) / field.cellSize)
+	alphaY := float64((y % field.cellSize) / field.cellSize)
+
+	return AngleLerp(
+		AngleLerp(field.GetCell(ix, iy).Angle(), field.GetCell(ix+1, iy).Angle(), alphaX),
+		AngleLerp(field.GetCell(ix, iy+1).Angle(), field.GetCell(ix+1, iy+1).Angle(), alphaX),
+		alphaY,
+	)
 }
 
 func NewVectorField(width int, height int, arrows bool, formula Formula) *VectorField {
