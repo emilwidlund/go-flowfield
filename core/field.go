@@ -31,7 +31,9 @@ func NewVectorField(width int, height int, arrows bool, formula Formula) *Vector
 		for x := 0; x < columns; x++ {
 			cartesianX, cartesianY := float64(x-columns/2), float64(rows/2-y)
 			scale := 10.
-			vec := formula(vectors.NewVector2(cartesianX/float64(columns)*scale, cartesianY/float64(rows)*scale)).Normalize()
+			adjustedX := cartesianX / float64(columns) * scale
+			adjustedY := cartesianY / float64(rows) * scale
+			vec := formula(vectors.NewVector2(adjustedX, adjustedY)).Normalize()
 
 			rowVectors[x] = vec
 		}
