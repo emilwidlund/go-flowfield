@@ -25,14 +25,23 @@ func Draw(field *VectorField) *gg.Context {
 }
 
 func DrawArrow(c *gg.Context, x float64, y float64, angle float64, length float64) {
+
+	// Initialize context stack
 	c.Push()
+
+	// Arrow
 	c.Translate(x, y)
 	c.Rotate(-angle)
 	c.DrawLine(0, 0, length, 0)
 	c.Stroke()
-	c.DrawLine(length, 0, length-2, -2)
-	c.DrawLine(length-2, -2, length-2, 2)
-	c.DrawLine(length-2, 2, length, 0)
+
+	// Arrow Head
+	arowHeadSize := 2.
+	c.DrawLine(length, 0, length-arowHeadSize, -arowHeadSize)
+	c.DrawLine(length-arowHeadSize, -arowHeadSize, length-arowHeadSize, arowHeadSize)
+	c.DrawLine(length-arowHeadSize, arowHeadSize, length, 0)
 	c.Stroke()
+
+	// Dispose context stack
 	c.Pop()
 }
