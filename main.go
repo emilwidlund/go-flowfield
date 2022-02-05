@@ -18,7 +18,7 @@ func main() {
 		return vectors.NewVector2(math.Cos(n), math.Sin(n))
 	}
 
-	field := core.NewVectorField(800, 600, formula)
+	field := core.NewVectorField(800, 600, true, formula)
 	context := core.Draw(field)
 
 	context.SavePNG("test.png")

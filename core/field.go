@@ -12,12 +12,13 @@ type VectorField struct {
 	columns  int
 	rows     int
 	cellSize int
+	arrows   bool
 	vectors  [][]*vectors.Vector2
 	formula  Formula
 }
 
-func NewVectorField(width int, height int, formula Formula) *VectorField {
-	const CELL_SIZE = 20
+func NewVectorField(width int, height int, arrows bool, formula Formula) *VectorField {
+	const CELL_SIZE = 30
 
 	columns := width / CELL_SIZE
 	rows := height / CELL_SIZE
@@ -44,6 +45,7 @@ func NewVectorField(width int, height int, formula Formula) *VectorField {
 		columns:  columns,
 		rows:     rows,
 		cellSize: CELL_SIZE,
+		arrows:   arrows,
 		vectors:  v,
 		formula:  formula,
 	}

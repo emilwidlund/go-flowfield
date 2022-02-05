@@ -12,20 +12,27 @@ func Draw(field *VectorField) *gg.Context {
 
 	for y, row := range field.vectors {
 		for x, vector := range row {
-			cellX, cellY := float64(x*field.cellSize), float64(y*field.cellSize)
+			halfCell := float64(field.cellSize / 2)
+			cellX, cellY := float64(x*field.cellSize)+halfCell, float64(y*field.cellSize)+halfCell
 
-			c.Push()
-			c.Translate(cellX, cellY)
-			c.Rotate(-vector.Angle())
-			c.DrawLine(0, 0, 10, 0)
-			c.Stroke()
-			c.DrawLine(10, 0, 9, -1)
-			c.DrawLine(9, -1, 9, 1)
-			c.DrawLine(9, 1, 10, 0)
-			c.Stroke()
-			c.Pop()
+			if field.arrows {
+				DrawArrow(c, cellX, cellY, vector.Angle(), halfCell)
+			}
 		}
 	}
 
 	return c
+}
+
+func DrawArrow(c *gg.Context, x float64, y float64, angle float64, length float64) {
+	c.Push()
+	c.Translate(x, y)
+	c.Rotate(-angle)
+	c.DrawLine(0, 0, length, 0)
+	c.Stroke()
+	c.DrawLine(length, 0, length-2, -2)
+	c.DrawLine(length-2, -2, length-2, 2)
+	c.DrawLine(length-2, 2, length, 0)
+	c.Stroke()
+	c.Pop()
 }
