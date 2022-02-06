@@ -20,24 +20,33 @@ type VectorField struct {
 }
 
 func (field *VectorField) GetCell(x int, y int) *vectors.Vector2 {
-	return field.vectors[y][x]
+	ix := math.Min(float64(field.columns-1), math.Max(0, float64(x)))
+	iy := math.Min(float64(field.rows-1), math.Max(0, float64(y)))
+	return field.vectors[int(iy)][int(ix)]
+}
+
+func (field *VectorField) SetCell(x int, y int, vector *vectors.Vector2) {
+	if x < field.columns && x >= 0 && y < field.rows && y >= 0 {
+		field.vectors[y][x] = vector
+	}
 }
 
 func (field *VectorField) GetCellIndex(x int, y int) (int, int) {
-	return int(math.Floor((float64((x)) / float64(field.cellSize)))), int(math.Floor(float64(y) / float64(field.cellSize)))
+	return int(math.Floor(float64(x) / float64(field.cellSize))), int(math.Floor(float64(y) / float64(field.cellSize)))
 }
 
 func (field *VectorField) GetAngle(x int, y int) float64 {
 	ix, iy := field.GetCellIndex(x, y)
 
-	alphaX := float64((x % field.cellSize) / field.cellSize)
-	alphaY := float64((y % field.cellSize) / field.cellSize)
+	alphaX := math.Mod(float64(x), float64(field.cellSize)) / float64(field.cellSize)
+	alphaY := math.Mod(float64(y), float64(field.cellSize)) / float64(field.cellSize)
 
 	return AngleLerp(
 		AngleLerp(field.GetCell(ix, iy).Angle(), field.GetCell(ix+1, iy).Angle(), alphaX),
 		AngleLerp(field.GetCell(ix, iy+1).Angle(), field.GetCell(ix+1, iy+1).Angle(), alphaX),
 		alphaY,
 	)
+
 }
 
 func NewVectorField(width int, height int, arrows bool, formula Formula) *VectorField {

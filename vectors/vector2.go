@@ -15,7 +15,7 @@ func NewVector2(x float64, y float64) *Vector2 {
 
 func (a *Vector2) Add(b *Vector2) *Vector2 {
 	a.X += b.X
-	a.Y += a.X
+	a.Y += b.Y
 
 	return a
 }

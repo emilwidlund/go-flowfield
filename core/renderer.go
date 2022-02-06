@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/emilwidlund/esmerelda/vectors"
@@ -50,7 +49,7 @@ func DrawArrow(c *gg.Context, x int, y int, angle float64, length int) {
 }
 
 func DrawSimulation(c *gg.Context, field *VectorField) {
-	DrawCurve(c, field, 20, 30)
+	DrawCurve(c, field, 500, 200)
 }
 
 func DrawCurve(c *gg.Context, field *VectorField, x int, y int) {
@@ -60,30 +59,25 @@ func DrawCurve(c *gg.Context, field *VectorField, x int, y int) {
 	c.Push()
 
 	p := vectors.NewVector2(float64(x), float64(y))
-	q := vectors.NewVector2(float64(x), float64(y))
-	n := NUM_STEPS >> 1
+	n := NUM_STEPS
 
-	curve := make([]*vectors.Vector2, NUM_STEPS)
+	curve := make([]vectors.Vector2, 0)
 
 	for n > 0 {
 		n--
 		angle := field.GetAngle(int(p.X), int(p.Y))
 		v := vectors.NewVector2(1, 0).Rotate(angle).Scale(STEP_LENGTH)
-		p := p.Add(v)
-		curve = append(curve, p)
+		p.Add(v)
+		curve = append(curve, *p)
 	}
 
-	curve = ReverseCurve(curve)
-	n = NUM_STEPS - (NUM_STEPS >> 1)
-	for n > 0 {
-		n--
-		angle := field.GetAngle(int(q.X), int(q.Y))
-		v := vectors.NewVector2(-1, 0).Rotate(angle).Scale(STEP_LENGTH)
-		q := q.Add(v)
-		curve = append(curve, q)
+	c.MoveTo(float64(x), float64(y))
+
+	for _, v := range curve {
+		c.LineTo(v.X, v.Y)
 	}
 
-	fmt.Println(curve)
+	c.Stroke()
 
 	c.Pop()
 }
@@ -109,7 +103,7 @@ func AngleLerp(a0 float64, a1 float64, t float64) float64 {
 	return a0 + ShortAngleDist(a0, a1)*t
 }
 
-func ReverseCurve(curve []*vectors.Vector2) []*vectors.Vector2 {
+func ReverseCurve(curve []vectors.Vector2) []vectors.Vector2 {
 	for i, j := 0, len(curve)-1; i < j; i, j = i+1, j-1 {
 		curve[i], curve[j] = curve[j], curve[i]
 	}
