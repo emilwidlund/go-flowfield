@@ -5,6 +5,7 @@ import (
 
 	"github.com/emilwidlund/esmerelda/vectors"
 	"github.com/fogleman/gg"
+	"github.com/fogleman/poissondisc"
 )
 
 func Draw(field *VectorField) *gg.Context {
@@ -49,7 +50,23 @@ func DrawArrow(c *gg.Context, x int, y int, angle float64, length int) {
 }
 
 func DrawSimulation(c *gg.Context, field *VectorField) {
-	DrawCurve(c, field, 500, 200)
+	const SIMULATION_COUNT = 500
+
+	d := float64(field.width) / math.Sqrt((float64(SIMULATION_COUNT)*float64(field.height))/float64(field.width))
+	x0 := 0.                    // bbox min
+	y0 := 0.                    // bbox min
+	x1 := float64(field.width)  // bbox max
+	y1 := float64(field.height) // bbox max
+	r := d * 0.8                // min distance between points
+	k := 15                     // max attempts to add neighboring point
+
+	points := poissondisc.Sample(x0, y0, x1, y1, r, k, nil)
+
+	for _, p := range points {
+		// c.DrawCircle(p.X, p.Y, 5)
+		// c.Fill()
+		DrawCurve(c, field, int(p.X), int(p.Y))
+	}
 }
 
 func DrawCurve(c *gg.Context, field *VectorField, x int, y int) {
