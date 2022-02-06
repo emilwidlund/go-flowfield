@@ -88,9 +88,10 @@ func (vector *Vector2) Normalize() *Vector2 {
 
 func (vector *Vector2) Rotate(angle float64) *Vector2 {
 	c, s := math.Cos(angle), math.Sin(angle)
+	x, y := vector.X*c-vector.Y*s, vector.X*s+vector.Y*c
 
-	vector.X = vector.X*c - vector.Y*s
-	vector.Y = vector.X*s + vector.Y*c
+	vector.X = x
+	vector.Y = y
 
 	return vector
 }

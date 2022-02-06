@@ -25,7 +25,9 @@ func Draw(field *VectorField) *gg.Context {
 		}
 	}
 
-	DrawSimulation(c, field)
+	if !field.arrows {
+		DrawSimulation(c, field)
+	}
 
 	return c
 }
@@ -63,10 +65,9 @@ func DrawSimulation(c *gg.Context, field *VectorField) {
 	points := poissondisc.Sample(x0, y0, x1, y1, r, k, nil)
 
 	for _, p := range points {
-		// c.DrawCircle(p.X, p.Y, 5)
-		// c.Fill()
 		DrawCurve(c, field, int(p.X), int(p.Y))
 	}
+
 }
 
 func DrawCurve(c *gg.Context, field *VectorField, x int, y int) {
@@ -76,19 +77,28 @@ func DrawCurve(c *gg.Context, field *VectorField, x int, y int) {
 	c.Push()
 
 	p := vectors.NewVector2(float64(x), float64(y))
-	n := NUM_STEPS
+	q := vectors.NewVector2(float64(x), float64(y))
+	n := NUM_STEPS >> 1
 
 	curve := make([]vectors.Vector2, 0)
 
 	for n > 0 {
 		n--
-		angle := field.GetAngle(int(p.X), int(p.Y))
-		v := vectors.NewVector2(1, 0).Rotate(angle).Scale(STEP_LENGTH)
+		angle := field.GetAngle(p.X, p.Y)
+		v := vectors.NewVector2(1, 0).Rotate(-angle).Scale(STEP_LENGTH)
 		p.Add(v)
 		curve = append(curve, *p)
 	}
 
-	c.MoveTo(float64(x), float64(y))
+	ReverseCurve(curve)
+	n = NUM_STEPS - (NUM_STEPS >> 1)
+	for n > 0 {
+		n--
+		angle := field.GetAngle(q.X, q.Y)
+		v := vectors.NewVector2(-1, 0).Rotate(-angle).Scale(STEP_LENGTH)
+		q.Add(v)
+		curve = append(curve, *q)
+	}
 
 	for _, v := range curve {
 		c.LineTo(v.X, v.Y)
@@ -97,6 +107,7 @@ func DrawCurve(c *gg.Context, field *VectorField, x int, y int) {
 	c.Stroke()
 
 	c.Pop()
+
 }
 
 func Sgn(a float64) int {

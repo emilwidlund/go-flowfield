@@ -13,13 +13,15 @@ func main() {
 	p := perlin.NewPerlin(2, 2, 3, 0)
 
 	formula := func(vector *vectors.Vector2) *vectors.Vector2 {
-		n := p.Noise2D(vector.X/20, vector.Y/20) * 10
+		n := p.Noise2D(vector.X/20, vector.Y/20) * 20
 
 		return vectors.NewVector2(math.Cos(n), math.Sin(n))
 	}
 
-	field := core.NewVectorField(800, 600, true, formula)
+	field := core.NewVectorField(800, 600, false, formula)
 	context := core.Draw(field)
 
 	context.SavePNG("test.png")
 }
+
+// return vectors.NewVector2(0, -1).Rotate((vector.Y / 20) * math.Pi)

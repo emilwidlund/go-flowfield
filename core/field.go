@@ -31,15 +31,15 @@ func (field *VectorField) SetCell(x int, y int, vector *vectors.Vector2) {
 	}
 }
 
-func (field *VectorField) GetCellIndex(x int, y int) (int, int) {
-	return int(math.Floor(float64(x) / float64(field.cellSize))), int(math.Floor(float64(y) / float64(field.cellSize)))
+func (field *VectorField) GetCellIndex(x float64, y float64) (int, int) {
+	return int(math.Floor(x / float64(field.cellSize))), int(math.Floor(y / float64(field.cellSize)))
 }
 
-func (field *VectorField) GetAngle(x int, y int) float64 {
+func (field *VectorField) GetAngle(x float64, y float64) float64 {
 	ix, iy := field.GetCellIndex(x, y)
 
-	alphaX := math.Mod(float64(x), float64(field.cellSize)) / float64(field.cellSize)
-	alphaY := math.Mod(float64(y), float64(field.cellSize)) / float64(field.cellSize)
+	alphaX := math.Mod(x, float64(field.cellSize)) / float64(field.cellSize)
+	alphaY := math.Mod(y, float64(field.cellSize)) / float64(field.cellSize)
 
 	return AngleLerp(
 		AngleLerp(field.GetCell(ix, iy).Angle(), field.GetCell(ix+1, iy).Angle(), alphaX),
