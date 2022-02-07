@@ -10,9 +10,10 @@ import (
 
 func Draw(field *VectorField) *gg.Context {
 	c := gg.NewContext(field.width, field.height)
-	c.SetHexColor("#ffffff")
+
+	c.SetHexColor("#000033")
 	c.Clear()
-	c.SetHexColor("#000000")
+	c.SetHexColor("#0000ff")
 
 	for y, row := range field.vectors {
 		for x, vector := range row {
@@ -26,9 +27,6 @@ func Draw(field *VectorField) *gg.Context {
 	}
 
 	if !field.arrows {
-		c.SetHexColor("#000033")
-		c.Clear()
-		c.SetHexColor("#0000ff")
 		DrawSimulation(c, field)
 	}
 
@@ -55,7 +53,7 @@ func DrawArrow(c *gg.Context, x int, y int, angle float64, length int) {
 }
 
 func DrawSimulation(c *gg.Context, field *VectorField) {
-	const SIMULATION_COUNT = 3000
+	const SIMULATION_COUNT = 5000
 
 	d := float64(field.width) / math.Sqrt((float64(SIMULATION_COUNT)*float64(field.height))/float64(field.width))
 	x0 := 0.                    // bbox min
@@ -67,7 +65,13 @@ func DrawSimulation(c *gg.Context, field *VectorField) {
 
 	points := poissondisc.Sample(x0, y0, x1, y1, r, k, nil)
 
-	for _, p := range points {
+	for i, p := range points {
+		if i%4 == 1 {
+			c.SetHexColor("#000044")
+		} else {
+			c.SetHexColor("#0000ff")
+		}
+
 		DrawCurve(c, field, int(p.X), int(p.Y))
 	}
 
@@ -108,7 +112,6 @@ func DrawCurve(c *gg.Context, field *VectorField, x int, y int) {
 	}
 
 	c.Stroke()
-
 	c.Pop()
 
 }
