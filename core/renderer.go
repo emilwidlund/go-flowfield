@@ -74,7 +74,7 @@ func DrawSimulation(c *gg.Context, field *VectorField) {
 }
 
 func DrawCurve(c *gg.Context, field *VectorField, x int, y int) {
-	const STEP_LENGTH = 1
+	const STEP_LENGTH = 2
 	const NUM_STEPS = 500
 
 	c.Push()

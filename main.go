@@ -18,7 +18,8 @@ func noiseFormula() core.Formula {
 	}
 }
 
-/* func circleFormula() core.Formula {
+/*
+func circleFormula() core.Formula {
 	return func(vector *vectors.Vector2) *vectors.Vector2 {
 		return vectors.NewVector2(0, -1).Rotate((vector.Y / 20) * math.Pi)
 	}
@@ -28,7 +29,13 @@ func sineFormula() core.Formula {
 	return func(vector *vectors.Vector2) *vectors.Vector2 {
 		return vectors.NewVector2(math.Sin(vector.Y), math.Sin(vector.X))
 	}
-} */
+}
+
+func customFormula() core.Formula {
+	return func(vector *vectors.Vector2) *vectors.Vector2 {
+		return vectors.NewVector2((vector.X*vector.X - vector.Y*vector.Y), vector.X*vector.Y)
+	}
+}*/
 
 func main() {
 	field := core.NewVectorField(1920, 1080, false, noiseFormula())
