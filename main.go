@@ -12,7 +12,7 @@ func noiseFormula() core.Formula {
 	p := perlin.NewPerlin(2, 2, 3, 0)
 
 	return func(vector *vectors.Vector2) *vectors.Vector2 {
-		n := p.Noise2D(vector.X/8, vector.Y/8) * 10
+		n := p.Noise2D(vector.X/40, vector.Y/40) * 10
 
 		return vectors.NewVector2(math.Cos(n), math.Sin(n))
 	}
