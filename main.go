@@ -8,20 +8,31 @@ import (
 	"github.com/emilwidlund/esmerelda/vectors"
 )
 
-func main() {
-
+func noiseFormula() core.Formula {
 	p := perlin.NewPerlin(2, 2, 3, 0)
 
-	formula := func(vector *vectors.Vector2) *vectors.Vector2 {
-		n := p.Noise2D(vector.X/20, vector.Y/20) * 20
+	return func(vector *vectors.Vector2) *vectors.Vector2 {
+		n := p.Noise2D(vector.X/8, vector.Y/8) * 10
 
 		return vectors.NewVector2(math.Cos(n), math.Sin(n))
 	}
+}
 
-	field := core.NewVectorField(800, 600, false, formula)
+/* func circleFormula() core.Formula {
+	return func(vector *vectors.Vector2) *vectors.Vector2 {
+		return vectors.NewVector2(0, -1).Rotate((vector.Y / 20) * math.Pi)
+	}
+}
+
+func sineFormula() core.Formula {
+	return func(vector *vectors.Vector2) *vectors.Vector2 {
+		return vectors.NewVector2(math.Sin(vector.Y), math.Sin(vector.X))
+	}
+} */
+
+func main() {
+	field := core.NewVectorField(1920, 1080, false, noiseFormula())
 	context := core.Draw(field)
 
 	context.SavePNG("test.png")
 }
-
-// return vectors.NewVector2(0, -1).Rotate((vector.Y / 20) * math.Pi)

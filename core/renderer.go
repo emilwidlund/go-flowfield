@@ -26,6 +26,9 @@ func Draw(field *VectorField) *gg.Context {
 	}
 
 	if !field.arrows {
+		c.SetHexColor("#000033")
+		c.Clear()
+		c.SetHexColor("#0000ff")
 		DrawSimulation(c, field)
 	}
 
@@ -52,7 +55,7 @@ func DrawArrow(c *gg.Context, x int, y int, angle float64, length int) {
 }
 
 func DrawSimulation(c *gg.Context, field *VectorField) {
-	const SIMULATION_COUNT = 500
+	const SIMULATION_COUNT = 3000
 
 	d := float64(field.width) / math.Sqrt((float64(SIMULATION_COUNT)*float64(field.height))/float64(field.width))
 	x0 := 0.                    // bbox min
