@@ -14,7 +14,7 @@ func noiseFormula() core.Formula {
 	return func(vector *vectors.Vector2) *vectors.Vector2 {
 		n := p.Noise2D(vector.X/40, vector.Y/40) * 10
 
-		return vectors.NewVector2(math.Cos(n), math.Sin(n))
+		return vectors.NewVector2(math.Cos(n+10), math.Sin(n))
 	}
 }
 
