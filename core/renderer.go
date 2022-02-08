@@ -54,7 +54,7 @@ func DrawArrow(c *gg.Context, x int, y int, angle float64, length int) {
 }
 
 func DrawCurves(c *gg.Context, field *VectorField) {
-	cc, h, w := float64(field.curveCount), float64(field.height), float64(field.width)
+	cc, w, h := float64(field.curveCount), float64(field.width), float64(field.height)
 
 	d := w / math.Sqrt((cc*h)/w)
 	x0 := 0.     // bbox min
