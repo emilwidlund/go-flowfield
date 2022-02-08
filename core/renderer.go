@@ -78,9 +78,7 @@ func DrawCurves(c *gg.Context, field *VectorField) {
 func DrawCurve(c *gg.Context, field *VectorField, x float64, y float64) {
 	c.Push()
 
-	curve := NewCurve(field, x, y)
-
-	for _, v := range curve.path {
+	for _, v := range NewCurve(field, x, y).path {
 		c.LineTo(v.X, v.Y)
 	}
 
