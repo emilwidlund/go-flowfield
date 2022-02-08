@@ -1,82 +1,82 @@
-package vectors
+package main
 
 import (
 	"math"
 )
 
-type Vector2 struct {
+type Vector struct {
 	X float64
 	Y float64
 }
 
-func NewVector2(x float64, y float64) *Vector2 {
-	return &Vector2{x, y}
+func NewVector(x float64, y float64) *Vector {
+	return &Vector{x, y}
 }
 
-func (a *Vector2) Add(b *Vector2) *Vector2 {
+func (a *Vector) Add(b *Vector) *Vector {
 	a.X += b.X
 	a.Y += b.Y
 
 	return a
 }
 
-func (vector *Vector2) AddScalar(scalar float64) *Vector2 {
+func (vector *Vector) AddScalar(scalar float64) *Vector {
 	vector.X += scalar
 	vector.Y += scalar
 
 	return vector
 }
 
-func (a *Vector2) Subtract(b *Vector2) *Vector2 {
+func (a *Vector) Subtract(b *Vector) *Vector {
 	a.X -= b.X
 	a.Y -= b.Y
 
 	return a
 }
 
-func (vector *Vector2) SubtractScalar(scalar float64) *Vector2 {
+func (vector *Vector) SubtractScalar(scalar float64) *Vector {
 	vector.X -= scalar
 	vector.Y -= scalar
 
 	return vector
 }
 
-func (a *Vector2) Multiply(b *Vector2) *Vector2 {
+func (a *Vector) Multiply(b *Vector) *Vector {
 	a.X *= b.X
 	a.Y *= b.Y
 
 	return a
 }
 
-func (vector *Vector2) MultiplyScalar(scalar float64) *Vector2 {
+func (vector *Vector) MultiplyScalar(scalar float64) *Vector {
 	vector.X *= scalar
 	vector.Y *= scalar
 
 	return vector
 }
 
-func (a *Vector2) Divide(b *Vector2) *Vector2 {
+func (a *Vector) Divide(b *Vector) *Vector {
 	a.X /= b.X
 	a.Y /= b.Y
 
 	return a
 }
 
-func (vector *Vector2) DivideScalar(scalar float64) *Vector2 {
+func (vector *Vector) DivideScalar(scalar float64) *Vector {
 	vector.X /= scalar
 	vector.Y /= scalar
 
 	return vector
 }
 
-func (vector *Vector2) Scale(scalar float64) *Vector2 {
+func (vector *Vector) Scale(scalar float64) *Vector {
 	vector.X *= scalar
 	vector.Y *= scalar
 
 	return vector
 }
 
-func (vector *Vector2) Normalize() *Vector2 {
+func (vector *Vector) Normalize() *Vector {
 	magnitude := vector.Magnitude()
 
 	if magnitude == 0 {
@@ -86,7 +86,7 @@ func (vector *Vector2) Normalize() *Vector2 {
 	}
 }
 
-func (vector *Vector2) Rotate(angle float64) *Vector2 {
+func (vector *Vector) Rotate(angle float64) *Vector {
 	c, s := math.Cos(angle), math.Sin(angle)
 	x, y := vector.X*c-vector.Y*s, vector.X*s+vector.Y*c
 
@@ -96,15 +96,15 @@ func (vector *Vector2) Rotate(angle float64) *Vector2 {
 	return vector
 }
 
-func (vector *Vector2) Magnitude() float64 {
+func (vector *Vector) Magnitude() float64 {
 	return math.Sqrt(math.Pow(vector.X, 2) + math.Pow(vector.Y, 2))
 }
 
-func (a *Vector2) DistanceTo(b *Vector2) float64 {
+func (a *Vector) DistanceTo(b *Vector) float64 {
 	s := *a
 	return s.Subtract(b).Magnitude()
 }
 
-func (vector *Vector2) Angle() float64 {
+func (vector *Vector) Angle() float64 {
 	return math.Atan2(vector.Y, vector.X)
 }

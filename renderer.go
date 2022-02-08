@@ -1,9 +1,8 @@
-package core
+package main
 
 import (
 	"math"
 
-	"github.com/emilwidlund/esmerelda/vectors"
 	"github.com/fogleman/gg"
 	"github.com/fogleman/poissondisc"
 )
@@ -83,7 +82,7 @@ func DrawCurve(c *gg.Context, field *VectorField, x float64, y float64) {
 	c.Push()
 
 	for _, v := range NewCurve(field, x, y).path {
-		r, g, b := GetColorByAngle(v.DistanceTo(vectors.NewVector2(x, y)))
+		r, g, b := GetColorByAngle(v.DistanceTo(NewVector(x, y)))
 		c.SetRGB(r, g, b)
 		c.LineTo(v.X, v.Y)
 	}

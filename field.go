@@ -1,12 +1,10 @@
-package core
+package main
 
 import (
 	"math"
-
-	"github.com/emilwidlund/esmerelda/vectors"
 )
 
-type Formula func(vector *vectors.Vector2) *vectors.Vector2
+type Formula func(vector *Vector) *Vector
 
 type VectorField struct {
 	width      int
@@ -18,7 +16,7 @@ type VectorField struct {
 	stepSize   float64
 	numSteps   int
 	arrows     bool
-	vectors    [][]*vectors.Vector2
+	vectors    [][]*Vector
 	formula    Formula
 }
 
@@ -26,17 +24,17 @@ func NewVectorField(width int, height int, formula Formula, cellSize int, curveC
 	columns := width / cellSize
 	rows := height / cellSize
 
-	v := make([][]*vectors.Vector2, rows)
+	v := make([][]*Vector, rows)
 
 	for y := 0; y < rows; y++ {
-		rowVectors := make([]*vectors.Vector2, columns)
+		rowVectors := make([]*Vector, columns)
 
 		for x := 0; x < columns; x++ {
 			cartesianX, cartesianY := float64(x-columns/2), float64(rows/2-y)
 			scale := 10.
 			adjustedX := cartesianX / float64(columns) * scale
 			adjustedY := cartesianY / float64(rows) * scale
-			vec := formula(vectors.NewVector2(adjustedX, adjustedY)).Normalize()
+			vec := formula(NewVector(adjustedX, adjustedY)).Normalize()
 
 			rowVectors[x] = vec
 		}
@@ -59,13 +57,13 @@ func NewVectorField(width int, height int, formula Formula, cellSize int, curveC
 	}
 }
 
-func (field *VectorField) GetCell(x int, y int) *vectors.Vector2 {
+func (field *VectorField) GetCell(x int, y int) *Vector {
 	ix := math.Min(float64(field.columns-1), math.Max(0, float64(x)))
 	iy := math.Min(float64(field.rows-1), math.Max(0, float64(y)))
 	return field.vectors[int(iy)][int(ix)]
 }
 
-func (field *VectorField) SetCell(x int, y int, vector *vectors.Vector2) {
+func (field *VectorField) SetCell(x int, y int, vector *Vector) {
 	if x < field.columns && x >= 0 && y < field.rows && y >= 0 {
 		field.vectors[y][x] = vector
 	}

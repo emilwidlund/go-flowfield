@@ -1,26 +1,22 @@
-package core
-
-import (
-	"github.com/emilwidlund/esmerelda/vectors"
-)
+package main
 
 type Curve struct {
-	path []vectors.Vector2
+	path []Vector
 }
 
 func NewCurve(field *VectorField, x float64, y float64) *Curve {
 	curve := &Curve{
-		path: make([]vectors.Vector2, 0),
+		path: make([]Vector, 0),
 	}
 
-	p := vectors.NewVector2(x, y)
-	q := vectors.NewVector2(x, y)
+	p := NewVector(x, y)
+	q := NewVector(x, y)
 	n := field.numSteps >> 1
 
 	for n > 0 {
 		n--
 		angle := field.GetAngle(p.X, p.Y)
-		v := vectors.NewVector2(1, 0).Rotate(-angle).Scale(field.stepSize)
+		v := NewVector(1, 0).Rotate(-angle).Scale(field.stepSize)
 		p.Add(v)
 		curve.AddSegment(p)
 	}
@@ -30,7 +26,7 @@ func NewCurve(field *VectorField, x float64, y float64) *Curve {
 	for n > 0 {
 		n--
 		angle := field.GetAngle(q.X, q.Y)
-		v := vectors.NewVector2(-1, 0).Rotate(-angle).Scale(field.stepSize)
+		v := NewVector(-1, 0).Rotate(-angle).Scale(field.stepSize)
 		q.Add(v)
 		curve.AddSegment(q)
 	}
@@ -38,7 +34,7 @@ func NewCurve(field *VectorField, x float64, y float64) *Curve {
 	return curve
 }
 
-func (curve *Curve) AddSegment(segment *vectors.Vector2) *Curve {
+func (curve *Curve) AddSegment(segment *Vector) *Curve {
 	curve.path = append(curve.path, *segment)
 
 	return curve
