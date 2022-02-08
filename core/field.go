@@ -9,14 +9,54 @@ import (
 type Formula func(vector *vectors.Vector2) *vectors.Vector2
 
 type VectorField struct {
-	width    int
-	height   int
-	columns  int
-	rows     int
-	cellSize int
-	arrows   bool
-	vectors  [][]*vectors.Vector2
-	formula  Formula
+	width      int
+	height     int
+	columns    int
+	rows       int
+	cellSize   int
+	curveCount int
+	stepSize   float64
+	numSteps   int
+	arrows     bool
+	vectors    [][]*vectors.Vector2
+	formula    Formula
+}
+
+func NewVectorField(width int, height int, formula Formula, cellSize int, curveCount int, stepSize float64, numSteps int, arrows bool) *VectorField {
+	columns := width / cellSize
+	rows := height / cellSize
+
+	v := make([][]*vectors.Vector2, rows)
+
+	for y := 0; y < rows; y++ {
+		rowVectors := make([]*vectors.Vector2, columns)
+
+		for x := 0; x < columns; x++ {
+			cartesianX, cartesianY := float64(x-columns/2), float64(rows/2-y)
+			scale := 10.
+			adjustedX := cartesianX / float64(columns) * scale
+			adjustedY := cartesianY / float64(rows) * scale
+			vec := formula(vectors.NewVector2(adjustedX, adjustedY)).Normalize()
+
+			rowVectors[x] = vec
+		}
+
+		v[y] = rowVectors
+	}
+
+	return &VectorField{
+		width:      width,
+		height:     height,
+		columns:    columns,
+		rows:       rows,
+		cellSize:   cellSize,
+		curveCount: curveCount,
+		stepSize:   stepSize,
+		numSteps:   numSteps,
+		arrows:     arrows,
+		vectors:    v,
+		formula:    formula,
+	}
 }
 
 func (field *VectorField) GetCell(x int, y int) *vectors.Vector2 {
@@ -49,38 +89,13 @@ func (field *VectorField) GetAngle(x float64, y float64) float64 {
 
 }
 
-func NewVectorField(width int, height int, arrows bool, formula Formula) *VectorField {
-	const CELL_SIZE = 30
+func ShortAngleDist(a0 float64, a1 float64) float64 {
+	max := math.Pi * 2
+	da := float64(Sgn(a1-a0)) * math.Mod(math.Abs(a1-a0), max)
 
-	columns := width / CELL_SIZE
-	rows := height / CELL_SIZE
+	return float64(Sgn(a1-a0))*math.Mod((2*math.Abs(da)), max) - da
+}
 
-	v := make([][]*vectors.Vector2, rows)
-
-	for y := 0; y < rows; y++ {
-		rowVectors := make([]*vectors.Vector2, columns)
-
-		for x := 0; x < columns; x++ {
-			cartesianX, cartesianY := float64(x-columns/2), float64(rows/2-y)
-			scale := 10.
-			adjustedX := cartesianX / float64(columns) * scale
-			adjustedY := cartesianY / float64(rows) * scale
-			vec := formula(vectors.NewVector2(adjustedX, adjustedY)).Normalize()
-
-			rowVectors[x] = vec
-		}
-
-		v[y] = rowVectors
-	}
-
-	return &VectorField{
-		width:    width,
-		height:   height,
-		columns:  columns,
-		rows:     rows,
-		cellSize: CELL_SIZE,
-		arrows:   arrows,
-		vectors:  v,
-		formula:  formula,
-	}
+func AngleLerp(a0 float64, a1 float64, t float64) float64 {
+	return a0 + ShortAngleDist(a0, a1)*t
 }

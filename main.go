@@ -38,7 +38,7 @@ func customFormula() core.Formula {
 }*/
 
 func main() {
-	field := core.NewVectorField(1920, 1080, false, noiseFormula())
+	field := core.NewVectorField(1920, 1080, noiseFormula(), 30, 5000, 2, 500, false)
 	context := core.Draw(field)
 
 	context.SavePNG("test.png")
