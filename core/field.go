@@ -99,3 +99,13 @@ func ShortAngleDist(a0 float64, a1 float64) float64 {
 func AngleLerp(a0 float64, a1 float64, t float64) float64 {
 	return a0 + ShortAngleDist(a0, a1)*t
 }
+
+func Sgn(a float64) int {
+	switch {
+	case a < 0:
+		return -1
+	case a > 0:
+		return +1
+	}
+	return 0
+}

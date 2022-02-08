@@ -87,13 +87,3 @@ func DrawCurve(c *gg.Context, field *VectorField, x float64, y float64) {
 	c.Stroke()
 	c.Pop()
 }
-
-func Sgn(a float64) int {
-	switch {
-	case a < 0:
-		return -1
-	case a > 0:
-		return +1
-	}
-	return 0
-}
