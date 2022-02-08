@@ -54,13 +54,15 @@ func DrawArrow(c *gg.Context, x int, y int, angle float64, length int) {
 }
 
 func DrawCurves(c *gg.Context, field *VectorField) {
-	d := float64(field.width) / math.Sqrt((float64(field.curveCount)*float64(field.height))/float64(field.width))
-	x0 := 0.                    // bbox min
-	y0 := 0.                    // bbox min
-	x1 := float64(field.width)  // bbox max
-	y1 := float64(field.height) // bbox max
-	r := d * 0.8                // min distance between points
-	k := 15                     // max attempts to add neighboring point
+	cc, h, w := float64(field.curveCount), float64(field.height), float64(field.width)
+
+	d := w / math.Sqrt((cc*h)/w)
+	x0 := 0.     // bbox min
+	y0 := 0.     // bbox min
+	x1 := w      // bbox max
+	y1 := h      // bbox max
+	r := d * 0.8 // min distance between points
+	k := 15      // max attempts to add neighboring point
 
 	points := poissondisc.Sample(x0, y0, x1, y1, r, k, nil)
 
