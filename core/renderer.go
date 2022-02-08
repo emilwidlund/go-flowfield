@@ -12,24 +12,26 @@ func Draw(field *VectorField) *gg.Context {
 
 	c.SetHexColor("#000033")
 	c.Clear()
+
+	if field.arrows {
+		DrawArrows(c, field)
+	} else {
+		DrawCurves(c, field)
+	}
+
+	return c
+}
+
+func DrawArrows(c *gg.Context, field *VectorField) {
 	c.SetHexColor("#0000ff")
 
 	for y, row := range field.vectors {
 		for x, vector := range row {
 			halfCell := field.cellSize / 2
 			cellX, cellY := x*field.cellSize+halfCell, y*field.cellSize+halfCell
-
-			if field.arrows {
-				DrawArrow(c, cellX, cellY, vector.Angle(), halfCell)
-			}
+			DrawArrow(c, cellX, cellY, vector.Angle(), halfCell)
 		}
 	}
-
-	if !field.arrows {
-		DrawCurves(c, field)
-	}
-
-	return c
 }
 
 func DrawArrow(c *gg.Context, x int, y int, angle float64, length int) {
@@ -71,7 +73,6 @@ func DrawCurves(c *gg.Context, field *VectorField) {
 
 		DrawCurve(c, field, p.X, p.Y)
 	}
-
 }
 
 func DrawCurve(c *gg.Context, field *VectorField, x float64, y float64) {
@@ -85,7 +86,6 @@ func DrawCurve(c *gg.Context, field *VectorField, x float64, y float64) {
 
 	c.Stroke()
 	c.Pop()
-
 }
 
 func Sgn(a float64) int {
