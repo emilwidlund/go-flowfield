@@ -101,7 +101,8 @@ func (vector *Vector2) Magnitude() float64 {
 }
 
 func (a *Vector2) DistanceTo(b *Vector2) float64 {
-	return a.Subtract(b).Magnitude()
+	s := *a
+	return s.Subtract(b).Magnitude()
 }
 
 func (vector *Vector2) Angle() float64 {

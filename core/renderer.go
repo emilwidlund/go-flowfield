@@ -3,6 +3,7 @@ package core
 import (
 	"math"
 
+	"github.com/emilwidlund/esmerelda/vectors"
 	"github.com/fogleman/gg"
 	"github.com/fogleman/poissondisc"
 )
@@ -23,8 +24,6 @@ func Draw(field *VectorField) *gg.Context {
 }
 
 func DrawArrows(c *gg.Context, field *VectorField) {
-	c.SetHexColor("#0000ff")
-
 	for y, row := range field.vectors {
 		for x, vector := range row {
 			halfCell := field.cellSize / 2
@@ -35,6 +34,9 @@ func DrawArrows(c *gg.Context, field *VectorField) {
 }
 
 func DrawArrow(c *gg.Context, x int, y int, angle float64, length int) {
+	r, g, b := GetColorByAngle(angle)
+	c.SetRGB(r, g, b)
+
 	c.Push()
 
 	// Arrow
@@ -81,9 +83,25 @@ func DrawCurve(c *gg.Context, field *VectorField, x float64, y float64) {
 	c.Push()
 
 	for _, v := range NewCurve(field, x, y).path {
+		r, g, b := GetColorByAngle(v.DistanceTo(vectors.NewVector2(x, y)))
+		c.SetRGB(r, g, b)
 		c.LineTo(v.X, v.Y)
 	}
 
 	c.Stroke()
 	c.Pop()
+}
+
+func GetColorByAngle(angle float64) (r float64, g float64, b float64) {
+	ra, ga, ba := math.Cos(angle), math.Cos(angle+20), math.Cos(angle-20)
+
+	return Clamp(Normalize(ra)+.2, 0, 1), Clamp(Normalize(ga)+.2, 0, 1), Clamp(Normalize(ba)+.2, 0, 1)
+}
+
+func Clamp(value float64, min float64, max float64) float64 {
+	return math.Min(math.Max(value, min), max)
+}
+
+func Normalize(value float64) float64 {
+	return (value + 1) * .5
 }
