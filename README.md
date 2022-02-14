@@ -1,4 +1,4 @@
-# Esmerelda
+# go-flowfield
 
 A flow field generator implemented in Go.
 
