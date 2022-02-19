@@ -1,4 +1,4 @@
-module github.com/emilwidlund/esmerelda
+module github.com/emilwidlund/go-flowfield
 
 go 1.17
 
